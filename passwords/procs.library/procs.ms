@@ -1,4 +1,3 @@
-
 proc('_store_password', @player, @password,
     store_value(concat('passwords.', to_lower(@player)), bcrypt(@password))
 )
@@ -40,7 +39,7 @@ proc('_lock_player', @player,
             )
         )
     )
-    if(gt(import('passwords.config')['time-limit-in-second-for-authentication'], 0), array_push(@taskIDs, set_timeout(multiply(import('passwords.config')['time-limit-in-second-for-authentication'], 1000), closure(@player, pkick(@player, concat(color('c'), 'You took too long to authenticate you.'))))))
+    if(gt(import('passwords.config')['time-limit-in-seconds-for-authentication'], 0), array_push(@taskIDs, set_timeout(multiply(import('passwords.config')['time-limit-in-seconds-for-authentication'], 1000), closure(@player, pkick(@player, concat(color('c'), 'You took too long to authenticate you.'))))))
     export(concat('players.', @player, 'passwords.taskIDs'), @taskIDs)
 
     bind('entity_damage', associative_array('id': concat('passwords_entityDamage_', @player), 'priority': 'highest'), null, @event, @player,
