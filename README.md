@@ -28,4 +28,4 @@ Passwords-CH
 
  - purge-on-startup: If true, on startup and /reload, the passwords of players considered inactive will be automatically removed from the database.
 
- - days-of-inactivity-for-purge: If a player has not connected since the numbers of days indicated, it is considered inactive.
+ - days-of-inactivity-for-purge: If a player has not connected since this number of days, it is considered inactive.
