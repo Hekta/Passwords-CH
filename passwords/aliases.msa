@@ -1,0 +1,101 @@
+
+/register [$password] [$confirmation] = >>>
+    include('procs.library/procs.ms')
+    ifelse(
+        equals($confirmation, ''),
+        die(color('c'), 'Command usage: /register <password> <password>'),
+        _phas_password(player()),
+        die(color('c'), 'You already have a password! You can use the /changepass command if you want to change it.'),
+        lt(length($password), import('passwords.config')['password-min-length']),
+        die(color('c'), 'The password you entered is too short! (at least ', import('passwords.config')['password-min-length'], ' characters)'),
+        nequals($password, $confirmation),
+        die(color('c'), 'Password and confirmation are not the same!'),
+        _store_password(player(), $password)
+        die(color('a'), 'Password saved! You can change or delete it with the /changepass or /delpass commands.')
+    )
+<<<
+
+/login [$password] = >>>
+    include('procs.library/procs.ms')
+    ifelse(
+        equals($password, ''),
+        die(color('c'), 'Command usage: /login <password>'),
+        not(_phas_password(player())),
+        die(color('c'), 'You do not have a password! Use the /register command to register your own.'),
+        not(_pis_locked(player())),
+        die(color('c'), 'You are already authenticated!'),
+        not(_check_password(player(), $password)),
+        die(color('c'), 'Wrong password!'),
+        _unlock_player(player())
+        die(color('a'), 'Authentication successful!')
+    )
+<<<
+
+/changepass [$currentpassword] [$newpassword] [$confirmation] = >>>
+    include('procs.library/procs.ms')
+    ifelse(
+        equals($confirmation, ''),
+        die(color('c'), 'Command usage: /changepass <currentpassword> <newpassword> <newpassword>'),
+        not(_phas_password(player())),
+        die(color('c'), 'You do not have a password! Use the /register command to register your own.'),
+        not(_check_password(player(), $currentpassword)),
+        die(color('c'), 'Wrong current password!'),
+        lt(length($newpassword), import('passwords.config')['password-min-length']),
+        die(color('c'), 'The password you entered is too short! (at least ', import('passwords.config')['password-min-length'], ' characters)'),
+        nequals($newpassword, $confirmation),
+        die(color('c'), 'New password and confirmation are not the same!'),
+        _store_password(player(), $newpassword)
+        die(color('a'), 'Password changed!')
+    )
+<<<
+
+/delpass [$currentpassword] = >>>
+    include('procs.library/procs.ms')
+    ifelse(
+        equals($currentpassword, ''),
+        die(color('c'), 'Command usage: /delpass <currentpassword>'),
+        not(_phas_password(player())),
+        die(color('c'), 'You do not have a password!'),
+        not(_check_password(player(), $currentpassword)),
+        die(color('c'), 'Wrong current password!'),
+        _clear_password(player())
+        die(color('a'), 'Password deleted!')
+    )
+<<<
+
+/passwords = call_alias('/help passwords')
+
+/help passwords = >>>
+    msg(color('e'), '---------', color('f'), ' Help: Passwords (1/1) ', color('e'), '-----------------')
+    msg(color('6'), '/changepass: ', color('f'), 'Modify your password.')
+    msg(color('6'), '/delpass: ', color('f'), 'Delete your password.')
+    msg(color('6'), '/login: ', color('f'), 'Authenticate yourself.')
+    msg(color('6'), '/passwords admin: ', color('f'), 'Commands for administrators to manage passwords.')
+    msg(color('6'), '/register: ', color('f'), 'Create a password.')
+<<<
+
+/passwords admin = >>>
+    msg(color('e'), '---------', color('f'), ' Help: Passwords Admin (1/1) ', color('e'), '-----------')
+#    if(not(has_permission('passwords.admin')), die())
+    msg(color('6'), '/password remove: ', color('f'), 'Remove the password of a player.')
+    msg(color('6'), '/passwords purge: ', color('f'), 'Delete passwords of players inactive since ', import('passwords.config')['days-of-inactivity-for-purge'], ' days or more.')
+<<<
+
+/passwords purge = >>>
+#    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do that.'))
+    include('procs.library/procs.ms')
+    die(color('e'), 'Passwords of these players were removed: ', array_implode(_purge_passwords(), ', '), '.')
+<<<
+
+/passwords remove [$player] = >>>
+#    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do that.'))
+    include('procs.library/procs.ms')
+    ifelse(
+        equals($player, ''),
+        die(color('c'), 'Command usage: /passwords remove <player>'),
+        not(_phas_password($player)),
+        die(color('c'), 'This player does not have a password!'),
+        _clear_password($player)
+        die(color('a'), 'Password deleted!')
+    )
+<<<
