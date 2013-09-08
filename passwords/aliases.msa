@@ -1,4 +1,3 @@
-
 /register [$password] [$confirmation] = >>>
     include('procs.library/procs.ms')
     ifelse(
@@ -76,19 +75,19 @@
 
 /passwords admin = >>>
     msg(color('e'), '---------', color('f'), ' Help: Passwords Admin (1/1) ', color('e'), '-----------')
-#    if(not(has_permission('passwords.admin')), die())
+    if(not(has_permission('passwords.admin')), die())
     msg(color('6'), '/password remove: ', color('f'), 'Remove the password of a player.')
     msg(color('6'), '/passwords purge: ', color('f'), 'Delete passwords of players inactive since ', import('passwords.config')['days-of-inactivity-for-purge'], ' days or more.')
 <<<
 
 /passwords purge = >>>
-#    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do that.'))
+    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do that.'))
     include('procs.library/procs.ms')
     die(color('e'), 'Passwords of these players were removed: ', array_implode(_purge_passwords(), ', '), '.')
 <<<
 
 /passwords remove [$player] = >>>
-#    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do that.'))
+    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do that.'))
     include('procs.library/procs.ms')
     ifelse(
         equals($player, ''),
