@@ -1,8 +1,10 @@
-purge-on-startup=false
-days-of-inactivity-for-purge=60
 
 logout-on-reload=true
 
+purge-on-startup=false
+days-of-inactivity-for-purge=60
+
+number-of-attempts-allowed=4
 time-limit-in-seconds-for-authentication=60
 
 password-min-length=5
