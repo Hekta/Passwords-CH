@@ -42,7 +42,7 @@
         lt(length($newpassword), import('passwords.config')['password-min-length']),
         die(color('c'), 'The password you entered is too short! (at least ', import('passwords.config')['password-min-length'], ' characters)'),
         nequals($newpassword, $confirmation),
-        die(color('c'), 'New password and confirmation are not the same!'),
+        die(color('c'), 'The new password and confirmation are not the same!'),
         _store_password(player(), $newpassword)
         die(color('a'), 'Password changed!')
     )
