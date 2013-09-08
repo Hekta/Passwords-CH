@@ -4,13 +4,22 @@ Passwords-CH
 
 - Installation:
 
- 1. Copy the "passwords" folder in the "LocalPackages" folder of CommandHelper.
+ - Copy the "passwords" folder in the "LocalPackages" folder of CommandHelper.
 
- 2. Add this line in "persistance.config" to create a database which will contains the passwords: storage.passwords.**=sqlite://database/passwords.db
+ - Add this line in "persistance.config" to create a database which will contain the passwords: storage.passwords.**=sqlite://database/passwords.db
 
- 3. The /passwords command will display the help.
+ - The /passwords command will display the help.
 
 
 - Permissions:
 
- - passwords.admin for use the admin aliases.
+ - "passwords.admin" for use the admin aliases.
+
+
+- Config:
+
+ - logout-on-reload: if true, players who have a password will have to reauthenticate after a /reload or a /reloadaliases command.
+
+ - password-min-length: minimum of character a password must contain.
+
+ - time-limit-in-second-for-authentication: After this limit, if a player is not authenticated, he will be kicked.
