@@ -79,7 +79,7 @@ proc('_lock_player', @player,
         cancel() tmsg(@event['player'], concat(color('c'), 'You are not authenticated!')) consume()
     )
     bind('player_move', associative_array('id': concat('passwords_playerMove_', @player), 'priority': 'highest'), associative_array('player': @player, 'threshold': 1), @event, @location,
-        set_ploc(@player, @location) consume()
+        set_ploc(@event['player'], @location) consume()
     )
     bind('pressure_plate_activated', associative_array('id': concat('passwords_pressurePlateActivated_', @player), 'priority': 'highest'), null, @event, @player,
         if(equals(@event['player'], @player), cancel() consume())
