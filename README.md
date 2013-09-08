@@ -8,7 +8,7 @@ Passwords-CH
 
  - Add this line in "persistance.config" in CommandHelper folder to create a database which will contain the passwords: storage.passwords.**=sqlite://database/passwords.db
 
- - You can edir the "config.txt".
+ - You can edit the "config.txt" file in "passwords" folder.
 
  - The /passwords command will display the help.
 
