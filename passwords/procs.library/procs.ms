@@ -1,3 +1,4 @@
+
 proc('_store_password', @player, @password,
     store_value(concat('passwords.', to_lower(@player)), bcrypt(@password))
 )
@@ -29,7 +30,7 @@ proc('_check_password', @player, @test,
 
 proc('_lock_player', @player,
     assign(@location, ploc(@player))
-    export(concat('players.', @player, '.isLocked'), true)
+    export(concat('players.', @player, '.passwords.isLocked'), true)
 
     assign(@taskIDs, array())
     array_push(@taskIDs,
@@ -90,6 +91,8 @@ proc('_lock_player', @player,
 
     export(concat('players.', @player, '.passwords.hasFlight'), phas_flight(@player))
     set_pflight(@player, true)
+
+    export(concat('players.', @player, '.passwords.attempts'), 0)
 )
 
 proc('_unlock_player', @player,
@@ -104,9 +107,11 @@ proc('_unlock_player', @player,
     set_pflight(@player, import(concat('players.', @player, '.passwords.hasFlight')))
     export(concat('players.', @player, '.passwords.hasFlight'), null)
 
-    export(concat('players.', @player, '.isLocked'), null)
+    export(concat('players.', @player, '.passwords.attempts'), 0)
+
+    export(concat('players.', @player, '.passwords.isLocked'), null)
 )
 
 proc('_pis_locked', @player,
-    return(boolean(import(concat('players.', @player, '.isLocked'))))
+    return(boolean(import(concat('players.', @player, '.passwords.isLocked'))))
 )
