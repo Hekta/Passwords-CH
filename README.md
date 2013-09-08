@@ -13,4 +13,4 @@ Passwords-CH
 
  - Permissions:
 
-   - passwords.admin for use the admin aliases.
+  - passwords.admin for use the admin aliases.
