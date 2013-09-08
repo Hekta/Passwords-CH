@@ -48,7 +48,7 @@ proc('_lock_player', @player,
             cancel() consume(),
             and(array_index_exists(@event, 'shooter'), equals(@event['shooter'], @player)),
             cancel() tmsg(@player, concat(color('c'), 'You are not authenticated!')) consume(),
-            and(array_index_exists(@event, 'damager'), equals(@event['shooter'], @player)),
+            and(array_index_exists(@event, 'damager'), equals(@event['damager'], @player)),
             cancel() tmsg(@player, concat(color('c'), 'You are not authenticated!')) consume(),
         )
     )
