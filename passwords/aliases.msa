@@ -81,13 +81,13 @@
 <<<
 
 /passwords purge = >>>
-    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do that.'))
+    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do this!'))
     include('procs.library/procs.ms')
     die(color('e'), 'Passwords of these players were removed: ', array_implode(_purge_passwords(), ', '), '.')
 <<<
 
 /passwords remove [$player] = >>>
-    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do that.'))
+    if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do this!'))
     include('procs.library/procs.ms')
     ifelse(
         equals($player, ''),
