@@ -1,4 +1,3 @@
-
 include('procs.library/procs.ms')
 
 assign(@config, ini_decode(read('config.txt')))
@@ -13,7 +12,7 @@ switch(array_get(@config, 'logout-on-reload', 'true'),
     array_set(@config, 'logout-on-reload', true),
     array_set(@config, 'logout-on-reload', false)
 )
-array_set(@config, 'number-of-attempts-allowed', integer(array_get(@config, 'number-of-attempts-allowed', 3)))
+array_set(@config, 'number-of-attempts-allowed', integer(array_get(@config, 'number-of-attempts-allowed', 4)))
 array_set(@config, 'time-limit-in-seconds-for-authentication', integer(array_get(@config, 'time-limit-in-seconds-for-authentication', 60)))
 array_set(@config, 'password-min-length', integer(array_get(@config, 'password-min-length', 5)))
 export('passwords.config', @config)
