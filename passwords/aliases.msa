@@ -1,3 +1,4 @@
+
 /register [$password] [$confirmation] = >>>
     include('procs.library/procs.ms')
     ifelse(
@@ -24,7 +25,15 @@
         not(_pis_locked(player())),
         die(color('c'), 'You are already authenticated!'),
         not(_check_password(player(), $password)),
-        die(color('c'), 'Wrong password!'),
+        msg(color('c'), 'Wrong password!')
+        if(gt(import('passwords.config')['number-of-attempts-allowed'], 0),
+            assign(@attempts, import(concat('players.', player(), '.passwords.attempts')))
+            inc(@attempts)
+            export(concat('players.', player(), '.passwords.attempts'), @attempts)
+            if(equals(@attempts, import('passwords.config')['number-of-attempts-allowed']),
+                pkick(player(), concat(color('c'), 'You made too many incorrect attempts.'))
+            )
+        ),
         _unlock_player(player())
         die(color('a'), 'Authentication successful!')
     )
