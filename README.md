@@ -8,6 +8,8 @@ Passwords-CH
 
  - Add this line in "persistance.config" to create a database which will contain the passwords: storage.passwords.**=sqlite://database/passwords.db
 
+ - You can edir the "config.txt".
+
  - The /passwords command will display the help.
 
 
@@ -16,7 +18,7 @@ Passwords-CH
  - "passwords.admin" for use the admin aliases.
 
 
-- Config:
+- Configs:
 
  - logout-on-reload: If true, players who have a password will have to reauthenticate after a /reload or a /reloadaliases command.
 
