@@ -20,7 +20,7 @@ Passwords-CH
 
 - Configs:
 
- - logout-on-reload: If true, players who have a password will have to reauthenticate after a /reload or a /reloadaliases command.
+ - logout-on-reload: If true, players who have a password will have to reauthenticate after a /reload or a /reloadaliases.
 
  - password-min-length: Minimum of character a password must contain.
 
