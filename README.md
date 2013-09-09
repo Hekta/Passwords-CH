@@ -15,7 +15,9 @@ Passwords-CH
 
 - Permissions:
 
- - "passwords.admin" for use the admin aliases.
+ - The label of the aliases is "passwords" (they require the "commandhelper.alias.passwords" permission to run properly).
+
+ - The "passwords.admin" permission is for use the admin aliases.
 
 
 - Configs:
