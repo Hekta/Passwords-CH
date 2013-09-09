@@ -22,7 +22,7 @@ Passwords-CH
 
 - Configs:
 
- - logout-on-reload: If true, players who have a password will have to reauthenticate after a /reload or a /reloadaliases.
+ - password-required-for-all-players: If true, all players will have to register a password to play, if false, only the players who will choose to register a password will have to enter it each connections.
 
  - password-min-length: Minimum of characters a password must contain.
 
