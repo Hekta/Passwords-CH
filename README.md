@@ -24,7 +24,9 @@ Passwords-CH
 
  - password-min-length: Minimum of characters a password must contain.
 
- - time-limit-in-seconds-for-authentication: After this limit, if a player is not authenticated, he will be kicked (0 to disable it).
+ - number-of-attempts-allowed: If a player exceeds the attempts limit, he will be kicked (0 to disable it).
+
+ - time-limit-in-seconds-for-authentication: After this time limit, if a player is not authenticated, he will be kicked (0 to disable it).
 
  - purge-on-startup: If true, on startup and /reload, the passwords of players considered inactive will be automatically removed from the database.
 
