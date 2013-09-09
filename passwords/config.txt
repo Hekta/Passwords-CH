@@ -1,5 +1,5 @@
 
-logout-on-reload=true
+password-required-for-all-players=false
 
 purge-on-startup=false
 days-of-inactivity-for-purge=60
