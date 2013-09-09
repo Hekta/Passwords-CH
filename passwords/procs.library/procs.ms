@@ -33,10 +33,22 @@ proc('_lock_player', @player,
     export(concat('players.', @player, '.passwords.isLocked'), true)
 
     assign(@taskIDs, array())
-    array_push(@taskIDs,
-        set_interval(10000, 0,
-            closure(@player,
-                tmsg(@player, concat(color('c'), 'You have a password, you must confirm your identity with the /login command if you want to play.'))
+    if(import('passwords.config')['password-required-for-all-players'],
+        array_push(@taskIDs,
+            set_interval(10000, 0,
+                closure(@player,
+                    if(_phas_password(@player),
+                        tmsg(@player, concat(color('c'), 'You must confirm your identity with the /login command to play on the server.')),
+                        tmsg(@player, concat(color('c'), 'You need to register a password to play on this server, use the /register command for this.'))
+                    )
+                )
+            )
+        ),
+        array_push(@taskIDs,
+            set_interval(10000, 0,
+                closure(@player,
+                    tmsg(@player, concat(color('c'), 'You have a password, you must confirm your identity with the /login command to play on the server.'))
+                )
             )
         )
     )
@@ -69,7 +81,7 @@ proc('_lock_player', @player,
         cancel() tmsg(@event['player'], concat(color(c), 'You are not authenticated!')) consume()
     )
     bind('player_command', associative_array('id': concat('passwords_playerCommand_', @player), 'priority': 'highest'), associative_array('player': @player), @event,
-        if(nequals_ic(@event['prefix'], '/login'),
+        if(not(array_contains_ic(array('/login', '/register'), @event['prefix'])),
             cancel() tmsg(@event['player'], concat(color('c'), 'You are not authenticated!')) consume()
         )
     )
