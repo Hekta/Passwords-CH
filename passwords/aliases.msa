@@ -11,7 +11,10 @@ passwords:/register [$password] [$confirmation] = >>>
         nequals($password, $confirmation),
         die(color('c'), 'Password and confirmation are not the same!'),
         _store_password(player(), $password)
-        die(color('a'), 'Password saved! You can change or delete it with the /changepass or /delpass commands.')
+        msg(color('a'), 'Password saved! You can change or delete it with the /changepass or /delpass commands.')
+        if(_pis_locked(player()),
+            _unlock_player(player())
+        )
     )
 <<<
 
@@ -64,6 +67,8 @@ passwords:/delpass [$currentpassword] = >>>
         die(color('c'), 'Command usage: /delpass <currentpassword>'),
         not(_phas_password(player())),
         die(color('c'), 'You do not have a password!'),
+        import('passwords.config')['password-required-for-all-players'],
+        die(color('c'), 'Passwords are required for all players, so you can\'t remove your own, use the /changepass command if you want to change it.'),
         not(_check_password(player(), $currentpassword)),
         die(color('c'), 'Wrong current password!'),
         _clear_password(player())
@@ -95,7 +100,7 @@ passwords:/passwords purge = >>>
     die(color('e'), 'Passwords of these players were removed: ', array_implode(_purge_passwords(), ', '), '.')
 <<<
 
-passwords:/passwords remove [$player] = >>>
+passwords:/password remove [$player] = >>>
     if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do this!'))
     include('procs.library/procs.ms')
     ifelse(
