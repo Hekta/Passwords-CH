@@ -1,5 +1,5 @@
 
-/register [$password] [$confirmation] = >>>
+passwords:/register [$password] [$confirmation] = >>>
     include('procs.library/procs.ms')
     ifelse(
         equals($confirmation, ''),
@@ -15,7 +15,7 @@
     )
 <<<
 
-/login [$password] = >>>
+passwords:/login [$password] = >>>
     include('procs.library/procs.ms')
     ifelse(
         equals($password, ''),
@@ -39,7 +39,7 @@
     )
 <<<
 
-/changepass [$currentpassword] [$newpassword] [$confirmation] = >>>
+passwords:/changepass [$currentpassword] [$newpassword] [$confirmation] = >>>
     include('procs.library/procs.ms')
     ifelse(
         equals($confirmation, ''),
@@ -57,7 +57,7 @@
     )
 <<<
 
-/delpass [$currentpassword] = >>>
+passwords:/delpass [$currentpassword] = >>>
     include('procs.library/procs.ms')
     ifelse(
         equals($currentpassword, ''),
@@ -71,9 +71,9 @@
     )
 <<<
 
-/passwords = call_alias('/help passwords')
+passwords:/passwords = call_alias('/help passwords')
 
-/help passwords = >>>
+passwords:/help passwords = >>>
     msg(color('e'), '---------', color('f'), ' Help: Passwords (1/1) ', color('e'), '-----------------')
     msg(color('6'), '/changepass: ', color('f'), 'Modify your password.')
     msg(color('6'), '/delpass: ', color('f'), 'Delete your password.')
@@ -82,20 +82,20 @@
     msg(color('6'), '/register: ', color('f'), 'Create a password.')
 <<<
 
-/passwords admin = >>>
+passwords:/passwords admin = >>>
     msg(color('e'), '---------', color('f'), ' Help: Passwords Admin (1/1) ', color('e'), '-----------')
     if(not(has_permission('passwords.admin')), die())
     msg(color('6'), '/password remove: ', color('f'), 'Remove the password of a player.')
     msg(color('6'), '/passwords purge: ', color('f'), 'Delete passwords of players inactive since ', import('passwords.config')['days-of-inactivity-for-purge'], ' days or more.')
 <<<
 
-/passwords purge = >>>
+passwords:/passwords purge = >>>
     if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do this!'))
     include('procs.library/procs.ms')
     die(color('e'), 'Passwords of these players were removed: ', array_implode(_purge_passwords(), ', '), '.')
 <<<
 
-/passwords remove [$player] = >>>
+passwords:/passwords remove [$player] = >>>
     if(not(has_permission('passwords.admin')), die(color('c'), 'You do not have permission to do this!'))
     include('procs.library/procs.ms')
     ifelse(
