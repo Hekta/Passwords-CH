@@ -1,4 +1,8 @@
 
+proc('_passwords_preference', @preference,
+    return(import('passwords.preferences')[@preference])
+)
+
 proc('_store_password', @player, @password,
     store_value(concat('passwords.', to_lower(@player)), bcrypt(@password))
 )
@@ -9,7 +13,7 @@ proc('_clear_password', @player,
 
 proc('_purge_passwords',
     assign(@players, array())
-    assign(@limit, multiply(1000, 60, 60, 24, import('passwords.preferences')['max-inactivity']))
+    assign(@limit, multiply(1000, 60, 60, 24, _passwords_preference('max-inactivity')))
     foreach(get_offline_players(), @player,
         if(and(_phas_password(@player), gt(subtract(time(), plast_played(@player)), @limit)),
             array_push(@players, @player)
@@ -33,7 +37,7 @@ proc('_lock_player', @player,
     export(concat('passwords.players.', @player, '.isLocked'), true)
 
     assign(@taskIDs, array())
-    if(import('passwords.preferences')['password-required'],
+    if(_passwords_preference('password-required'),
         array_push(@taskIDs,
             set_interval(10000, 0,
                 closure(@player,
@@ -52,7 +56,7 @@ proc('_lock_player', @player,
             )
         )
     )
-    if(gt(import('passwords.preferences')['time-limit'], 0), array_push(@taskIDs, set_timeout(multiply(import('passwords.preferences')['time-limit'], 1000), closure(@player, pkick(@player, concat(color('c'), 'You took too long to authenticate you.'))))))
+    if(gt(_passwords_preference('time-limit'), 0), array_push(@taskIDs, set_timeout(multiply(_passwords_preference('time-limit'), 1000), closure(@player, pkick(@player, concat(color('c'), 'You took too long to authenticate you.'))))))
     export(concat('passwords.players.', @player, '.lockTaskIDs'), @taskIDs)
 
     bind('entity_damage', associative_array('id': concat('passwords_entityDamage_', @player), 'priority': 'highest'), null, @event, @player,
