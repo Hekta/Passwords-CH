@@ -20,7 +20,7 @@ Passwords-CH
  - The "passwords.admin" permission is needed to use the admin aliases.
 
 
-- Configs:
+- Preferences:
 
  - password-required: If true, all players will have to register a password to play, if false, only the players who will choose to register a password will have to enter it each connections.
 
