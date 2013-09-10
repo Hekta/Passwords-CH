@@ -2,7 +2,7 @@
 include('procs.library/procs.ms')
 
 
-assign(@config, yml_decode(read('config.txt')))
+assign(@config, yml_decode(read('../passwords-preferences.txt')))
 array_set(@config, 'password-required', boolean(array_get(@config, 'password-required', false)))
 array_set(@config, 'purge-on-startup', boolean(array_get(@config, 'purge-on-startup', false)))
 array_set(@config, 'max-inactivity', integer(array_get(@config, 'max-inactivity', 60)))
