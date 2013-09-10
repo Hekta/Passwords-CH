@@ -1,10 +1,18 @@
 
-password-required-for-all-players=false
+password-required: false
+# If true, all players will have to register a password to play, if false, only the players who will choose to register a password will have to enter it each connections.
 
-purge-on-startup=false
-days-of-inactivity-for-purge=60
+attempts-allowed: 4
+# Number of attempts allowed. If a player exceeds the attempts limit, he will be kicked (0 to disable it).
 
-number-of-attempts-allowed=4
-time-limit-in-seconds-for-authentication=60
+time-limit: 60
+# In seconds. After the time limit, if a player is not authenticated, he will be kicked (0 to disable it).
 
-password-min-length=5
+min-length: 5
+# Minimum of characters a password must contain.
+
+purge-on-startup: false
+# If true, on startup and /reload, the passwords of players considered inactive will be automatically removed from the database.
+
+max-inactivity: 60
+# In days. If a player has not connected since this number of days, it is considered inactive.
