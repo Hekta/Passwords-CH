@@ -9,7 +9,7 @@ proc('_clear_password', @player,
 
 proc('_purge_passwords',
     assign(@players, array())
-    assign(@limit, multiply(1000, 60, 60, 24, import('passwords.config')['max-inactivity']))
+    assign(@limit, multiply(1000, 60, 60, 24, import('passwords.preferences')['max-inactivity']))
     foreach(get_offline_players(), @player,
         if(and(_phas_password(@player), gt(subtract(time(), plast_played(@player)), @limit)),
             array_push(@players, @player)
@@ -30,10 +30,10 @@ proc('_check_password', @player, @test,
 
 proc('_lock_player', @player,
     assign(@location, ploc(@player))
-    export(concat('players.', @player, '.passwords.isLocked'), true)
+    export(concat('passwords.players.', @player, '.isLocked'), true)
 
     assign(@taskIDs, array())
-    if(import('passwords.config')['password-required'],
+    if(import('passwords.preferences')['password-required'],
         array_push(@taskIDs,
             set_interval(10000, 0,
                 closure(@player,
@@ -52,8 +52,8 @@ proc('_lock_player', @player,
             )
         )
     )
-    if(gt(import('passwords.config')['time-limit'], 0), array_push(@taskIDs, set_timeout(multiply(import('passwords.config')['time-limit'], 1000), closure(@player, pkick(@player, concat(color('c'), 'You took too long to authenticate you.'))))))
-    export(concat('players.', @player, 'passwords.taskIDs'), @taskIDs)
+    if(gt(import('passwords.preferences')['time-limit'], 0), array_push(@taskIDs, set_timeout(multiply(import('passwords.preferences')['time-limit'], 1000), closure(@player, pkick(@player, concat(color('c'), 'You took too long to authenticate you.'))))))
+    export(concat('passwords.players.', @player, '.lockTaskIDs'), @taskIDs)
 
     bind('entity_damage', associative_array('id': concat('passwords_entityDamage_', @player), 'priority': 'highest'), null, @event, @player,
         ifelse(
@@ -92,7 +92,7 @@ proc('_lock_player', @player,
         cancel() tmsg(@event['player'], concat(color('c'), 'You are not authenticated!')) consume()
     )
     bind('player_move', associative_array('id': concat('passwords_playerMove_', @player), 'priority': 'highest'), associative_array('player': @player, 'threshold': 1), @event, @location,
-        set_ploc(@event['player'], @location) consume()
+        if(ponline(@event['player']), set_ploc(@event['player'], @location)) consume()
     )
     bind('pressure_plate_activated', associative_array('id': concat('passwords_pressurePlateActivated_', @player), 'priority': 'highest'), null, @event, @player,
         if(equals(@event['player'], @player), cancel() consume())
@@ -101,29 +101,29 @@ proc('_lock_player', @player,
         cancel() consume()
     )
 
-    export(concat('players.', @player, '.passwords.hasFlight'), phas_flight(@player))
+    export(concat('passwords.players.', @player, '.lockHasFlight'), phas_flight(@player))
     set_pflight(@player, true)
 
-    export(concat('players.', @player, '.passwords.attempts'), 0)
+    export(concat('passwords.players.', @player, '.attempts'), 0)
 )
 
 proc('_unlock_player', @player,
-    assign(@taskIDs, import(concat('players.', @player, 'passwords.taskIDs')))
+    assign(@taskIDs, import(concat('passwords.players.', @player, '.lockTaskIDs')))
     if(is_array(@taskIDs), foreach(@taskIDs, @taskID, clear_task(@taskID)))
-    export(concat('players.', @player, 'passwords.taskIDs'), null)
+    export(concat('passwords.players.', @player, '.lockTaskIDs'), null)
 
     foreach(array('entityDamage', 'expChange', 'inventoryClick', 'itemDrop', 'itemPickup', 'playerChat', 'playerCommand', 'playerInteract', 'playerInteractEntity', 'playerMove', 'pressurePlateActivated', 'targetPlayer'), @eventName,
         unbind(concat('passwords_', @eventName, '_', @player))
     )
 
-    set_pflight(@player, import(concat('players.', @player, '.passwords.hasFlight')))
-    export(concat('players.', @player, '.passwords.hasFlight'), null)
+    set_pflight(@player, import(concat('passwords.players.', @player, '.lockHasFlight')))
+    export(concat('passwords.players.', @player, '.lockHasFlight'), null)
 
-    export(concat('players.', @player, '.passwords.attempts'), 0)
+    export(concat('passwords.players.', @player, '.attempts'), null)
 
-    export(concat('players.', @player, '.passwords.isLocked'), null)
+    export(concat('passwords.players.', @player, '.isLocked'), null)
 )
 
 proc('_pis_locked', @player,
-    return(boolean(import(concat('players.', @player, '.passwords.isLocked'))))
+    return(boolean(import(concat('passwords.players.', @player, '.isLocked'))))
 )
