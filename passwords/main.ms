@@ -9,19 +9,19 @@ array_set(@config, 'max-inactivity', integer(array_get(@config, 'max-inactivity'
 array_set(@config, 'attempts-allowed', integer(array_get(@config, 'attempts-allowed', 4)))
 array_set(@config, 'time-limit', integer(array_get(@config, 'time-limit', 60)))
 array_set(@config, 'min-length', integer(array_get(@config, 'min-length', 5)))
-export('passwords.config', @config)
+export('passwords.preferences', @config)
 
 
-if(import('passwords.config')['purge-on-startup'], _purge_passwords())
+if(import('passwords.preferences')['purge-on-startup'], _purge_passwords())
 
 
-if(import('passwords.config')['password-required'],
+if(import('passwords.preferences')['password-required'],
     foreach(all_players(), @player, if(_pis_locked(@player), _unlock_player(@player)) _lock_player(@player)),
     foreach(all_players(), @player, if(_phas_password(@player), if(_pis_locked(@player), _unlock_player(@player)) _lock_player(@player)))
 )
 
 
-if(import('passwords.config')['password-required'],
+if(import('passwords.preferences')['password-required'],
     bind('player_join', associative_array('priority': 'highest'), null, @event,
         _lock_player(@event['player'])
     ),
