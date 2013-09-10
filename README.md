@@ -4,11 +4,11 @@ Passwords-CH
 
 - Installation:
 
- - Copy the "passwords" folder in the LocalPackages folder of CommandHelper.
+ - Copy the "passwords" folder and the "passwords-preferences.txt" file in the LocalPackages folder of CommandHelper.
 
  - Add this line in "persistance.config" in CommandHelper folder to create a database which will contain the passwords: storage.passwords.**=sqlite://database/passwords.db
 
- - You can edit the "config.txt" file in "passwords" folder.
+ - You can edit the "passwords-preferences.txt" file.
 
  - The /passwords command will display the help.
 
