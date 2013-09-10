@@ -6,8 +6,8 @@ passwords:/register [$password] [$confirmation] = >>>
         die(color('c'), 'Command usage: /register <password> <password>'),
         _phas_password(player()),
         die(color('c'), 'You already have a password! You can use the /changepass command if you want to change it.'),
-        lt(length($password), import('passwords.preferences')['min-length']),
-        die(color('c'), 'The password you entered is too short! (at least ', import('passwords.preferences')['min-length'], ' characters)'),
+        lt(length($password), _passwords_preference('min-length')),
+        die(color('c'), 'The password you entered is too short! (at least ', _passwords_preference('min-length'), ' characters)'),
         nequals($password, $confirmation),
         die(color('c'), 'Password and confirmation are not the same!'),
         _store_password(player(), $password)
@@ -29,11 +29,11 @@ passwords:/login [$password] = >>>
         die(color('c'), 'You are already authenticated!'),
         not(_check_password(player(), $password)),
         msg(color('c'), 'Wrong password!')
-        if(gt(import('passwords.preferences')['attempts-allowed'], 0),
+        if(gt(_passwords_preference('attempts-allowed'), 0),
             assign(@attempts, import(concat('passwords.players.', player(), '.attempts')))
             inc(@attempts)
             export(concat('passwords.players.', player(), '.attempts'), @attempts)
-            if(equals(@attempts, import('passwords.preferences')['attempts-allowed']),
+            if(equals(@attempts, _passwords_preference('attempts-allowed')),
                 pkick(player(), concat(color('c'), 'You made too many incorrect attempts.'))
             )
         ),
@@ -51,8 +51,8 @@ passwords:/changepass [$currentpassword] [$newpassword] [$confirmation] = >>>
         die(color('c'), 'You do not have a password! Use the /register command to register your own.'),
         not(_check_password(player(), $currentpassword)),
         die(color('c'), 'Wrong current password!'),
-        lt(length($newpassword), import('passwords.preferences')['min-length']),
-        die(color('c'), 'The password you entered is too short! (at least ', import('passwords.preferences')['min-length'], ' characters)'),
+        lt(length($newpassword), _passwords_preference('min-length')),
+        die(color('c'), 'The password you entered is too short! (at least ', _passwords_preference('min-length'), ' characters)'),
         nequals($newpassword, $confirmation),
         die(color('c'), 'The new password and confirmation are not the same!'),
         _store_password(player(), $newpassword)
@@ -67,7 +67,7 @@ passwords:/delpass [$currentpassword] = >>>
         die(color('c'), 'Command usage: /delpass <currentpassword>'),
         not(_phas_password(player())),
         die(color('c'), 'You do not have a password!'),
-        import('passwords.preferences')['password-required'],
+        _passwords_preference('password-required'),
         die(color('c'), 'Passwords are required for all players, so you can\'t remove your own, use the /changepass command if you want to change it.'),
         not(_check_password(player(), $currentpassword)),
         die(color('c'), 'Wrong current password!'),
@@ -78,20 +78,21 @@ passwords:/delpass [$currentpassword] = >>>
 
 passwords:/passwords = call_alias('/help passwords')
 
+passwords:/password = call_alias('/help passwords')
+
+passwords:/passwords help = call_alias('/help passwords')
+
+passwords:/password help = call_alias('/help passwords')
+
 passwords:/help passwords = >>>
+    include('procs.library/procs.ms')
     msg(color('e'), '---------', color('f'), ' Help: Passwords (1/1) ', color('e'), '-----------------')
     msg(color('6'), '/changepass: ', color('f'), 'Modify your password.')
     msg(color('6'), '/delpass: ', color('f'), 'Delete your password.')
     msg(color('6'), '/login: ', color('f'), 'Authenticate yourself.')
-    msg(color('6'), '/passwords admin: ', color('f'), 'Commands for administrators to manage passwords.')
+    if(has_permission('passwords.admin'), msg(color('6'), '/password remove: ', color('f'), 'Remove the password of a player.'))
+    if(has_permission('passwords.admin'), msg(color('6'), '/passwords purge: ', color('f'), 'Delete passwords of inactive players (since ', _passwords_preference('max-inactivity'), ' days or more).'))
     msg(color('6'), '/register: ', color('f'), 'Create a password.')
-<<<
-
-passwords:/passwords admin = >>>
-    msg(color('e'), '---------', color('f'), ' Help: Passwords Admin (1/1) ', color('e'), '-----------')
-    if(not(has_permission('passwords.admin')), die())
-    msg(color('6'), '/password remove: ', color('f'), 'Remove the password of a player.')
-    msg(color('6'), '/passwords purge: ', color('f'), 'Delete passwords of inactive players (since ', import('passwords.preferences')['max-inactivity'], ' days or more).')
 <<<
 
 passwords:/passwords purge = >>>
