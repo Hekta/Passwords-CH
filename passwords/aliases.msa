@@ -6,8 +6,8 @@ passwords:/register [$password] [$confirmation] = >>>
         die(color('c'), 'Command usage: /register <password> <password>'),
         _phas_password(player()),
         die(color('c'), 'You already have a password! You can use the /changepass command if you want to change it.'),
-        lt(length($password), import('passwords.config')['password-min-length']),
-        die(color('c'), 'The password you entered is too short! (at least ', import('passwords.config')['password-min-length'], ' characters)'),
+        lt(length($password), import('passwords.config')['min-length']),
+        die(color('c'), 'The password you entered is too short! (at least ', import('passwords.config')['min-length'], ' characters)'),
         nequals($password, $confirmation),
         die(color('c'), 'Password and confirmation are not the same!'),
         _store_password(player(), $password)
@@ -29,11 +29,11 @@ passwords:/login [$password] = >>>
         die(color('c'), 'You are already authenticated!'),
         not(_check_password(player(), $password)),
         msg(color('c'), 'Wrong password!')
-        if(gt(import('passwords.config')['number-of-attempts-allowed'], 0),
+        if(gt(import('passwords.config')['attempts-allowed'], 0),
             assign(@attempts, import(concat('players.', player(), '.passwords.attempts')))
             inc(@attempts)
             export(concat('players.', player(), '.passwords.attempts'), @attempts)
-            if(equals(@attempts, import('passwords.config')['number-of-attempts-allowed']),
+            if(equals(@attempts, import('passwords.config')['attempts-allowed']),
                 pkick(player(), concat(color('c'), 'You made too many incorrect attempts.'))
             )
         ),
@@ -51,8 +51,8 @@ passwords:/changepass [$currentpassword] [$newpassword] [$confirmation] = >>>
         die(color('c'), 'You do not have a password! Use the /register command to register your own.'),
         not(_check_password(player(), $currentpassword)),
         die(color('c'), 'Wrong current password!'),
-        lt(length($newpassword), import('passwords.config')['password-min-length']),
-        die(color('c'), 'The password you entered is too short! (at least ', import('passwords.config')['password-min-length'], ' characters)'),
+        lt(length($newpassword), import('passwords.config')['min-length']),
+        die(color('c'), 'The password you entered is too short! (at least ', import('passwords.config')['min-length'], ' characters)'),
         nequals($newpassword, $confirmation),
         die(color('c'), 'The new password and confirmation are not the same!'),
         _store_password(player(), $newpassword)
@@ -67,7 +67,7 @@ passwords:/delpass [$currentpassword] = >>>
         die(color('c'), 'Command usage: /delpass <currentpassword>'),
         not(_phas_password(player())),
         die(color('c'), 'You do not have a password!'),
-        import('passwords.config')['password-required-for-all-players'],
+        import('passwords.config')['password-required'],
         die(color('c'), 'Passwords are required for all players, so you can\'t remove your own, use the /changepass command if you want to change it.'),
         not(_check_password(player(), $currentpassword)),
         die(color('c'), 'Wrong current password!'),
@@ -91,7 +91,7 @@ passwords:/passwords admin = >>>
     msg(color('e'), '---------', color('f'), ' Help: Passwords Admin (1/1) ', color('e'), '-----------')
     if(not(has_permission('passwords.admin')), die())
     msg(color('6'), '/password remove: ', color('f'), 'Remove the password of a player.')
-    msg(color('6'), '/passwords purge: ', color('f'), 'Delete passwords of players inactive since ', import('passwords.config')['days-of-inactivity-for-purge'], ' days or more.')
+    msg(color('6'), '/passwords purge: ', color('f'), 'Delete passwords of players inactive since ', import('passwords.config')['max-inactivity'], ' days or more.')
 <<<
 
 passwords:/passwords purge = >>>
